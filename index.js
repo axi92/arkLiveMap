@@ -2,6 +2,7 @@ const express = require('express');
 const http = require('http');
 const bodyParser = require('body-parser');
 const WebSocket = require('ws');
+const schedule = require('node-schedule');
 
 const app = express();
 const port = 8080;
@@ -62,19 +63,19 @@ app.post('/rest/v1', function (req, res) {
   // console.log('Map:', server_data);
 });
 
-app.post('/', function (req, res) {
+// app.post('/', function (req, res) {
 
-  let message = req.body.message;
-  console.log('Regular POST message: ', message);
-  return res.json({
-    answer: 42
-  });
-});
+//   let message = req.body.message;
+//   console.log('Regular POST message: ', message);
+//   return res.json({
+//     answer: 42
+//   });
+// });
 
 
 const server = http.createServer(app);
 const wss = new WebSocket.Server({
-  clientTracking: false,
+  clientTracking: true,
   noServer: true
 });
 
@@ -94,7 +95,7 @@ wss.on('connection', function (ws, request) {
     //
     // Here we can now use session parameters.
     //
-    console.log(`Received message ${message} from user ${userId}`);
+    console.log(`Received message ${message}`);
   });
 
   ws.on('close', function () {
@@ -103,6 +104,22 @@ wss.on('connection', function (ws, request) {
 });
 
 
+
+
+schedule.scheduleJob('*/15 * * * * *', async function () {
+  if(wss.clients != undefined){
+    wss.clients.forEach(function each(client) {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send('test');
+      }
+    });
+  } else {
+    console.log('no clients connected');
+  }
+
+});
+
 server.listen(port, function () {
   console.log(`Listening on http://localhost:${port}`);
 });
+

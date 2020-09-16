@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="css/style.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3/leaflet.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"
+    type="text/css" />
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"
+    type="text/css" />
+</head>
+
+<body>
+
+  <div id='map'></div>
+  <% if(map == 'Ragnarok'){ %>
+  <script>
+    var mapfile = '/images/ragnarok.jpg';
+    var bounds = [
+      [-700000, -700000],
+      [700000, 700000]
+    ];
+    var blueObelisk = [-427363, -416936, 'Blue obelisk'];
+    var greenObelisk = [92034, -155512, 'Green obelisk'];
+    var redObelisk = [-196153, 467466, 'Red obelisk'];
+  </script>
+  <% } else{ %>
+
+  <% } %>
+  <script>
+    <%- mark %>
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3/leaflet.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js">
+  </script>
+  <script src="/js/map.js"></script>
+  <script src="/js/ws.js"></script>
+
+
+
+</body>
+
+</html>

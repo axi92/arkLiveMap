@@ -3,6 +3,7 @@ const http = require('http');
 const bodyParser = require('body-parser');
 const WebSocket = require('ws');
 const schedule = require('node-schedule');
+const uuid = require('uuid').v4;
 
 const app = express();
 const port = 8080;
@@ -10,7 +11,6 @@ const server_data = new Map();
 const static_map_data = new Map();
 const awesomeMapIconName = 'user-o';
 const MapPinColor = 'darkblue';
-var connections = [];
 // static_map_data.set('Ragnarok', {
 //   bounds: [
 //     [-700000, -700000],
@@ -31,17 +31,19 @@ app.use('/js', express.static('views/js'));
 app.get('/:id', (req, res) => {
   if (req.params.id == 'favicon.ico') return;
   let json = server_data.get(req.params.id);
-  var players = json.players;
-  // let map_defaults = static_map_data.get('Ragnarok');
-  var markers = 'var mark = [';
-  for (var key in players) {
-    if (players.hasOwnProperty(key)) {
-      markers += '[' + players[key].x + ',' + players[key].y + ',"' + awesomeMapIconName + '","' + MapPinColor + '","' + players[key].playername + '","' + players[key].tribename + '",' + players[key].z + '],';
+  if(typeof(json) != 'undefined'){
+    var players = json.players;
+    // let map_defaults = static_map_data.get('Ragnarok');
+    var markers = 'var mark = [';
+    for (var key in players) {
+      if (players.hasOwnProperty(key)) {
+        markers += '[' + players[key].x + ',' + players[key].y + ',"' + awesomeMapIconName + '","' + MapPinColor + '","' + players[key].playername + '","' + players[key].tribename + '",' + players[key].z + '],';
+      }
     }
+    markers = markers.slice(0, -1); // slice the last ","
+    markers += '];';
   }
-  markers = markers.slice(0, -1); // slice the last ","
-  markers += '];';
-  if (markers == 'var mark = ];') {
+  if (markers == 'var mark = ];' || markers == undefined) {
     markers = 'var mark = [];';
   }
 
@@ -63,15 +65,6 @@ app.post('/rest/v1', function (req, res) {
   // console.log('Map:', server_data);
 });
 
-// app.post('/', function (req, res) {
-
-//   let message = req.body.message;
-//   console.log('Regular POST message: ', message);
-//   return res.json({
-//     answer: 42
-//   });
-// });
-
 
 const server = http.createServer(app);
 const wss = new WebSocket.Server({
@@ -89,19 +82,28 @@ server.on('upgrade', function (request, socket, head) {
 });
 
 wss.on('connection', function (ws, request) {
-
+  console.log('wss on connection');
+  ws.id = wss.getUniqueID();
+  console.log('websocket client id:', ws.id);
+  ws.send(JSON.stringify({ id: ws.id}));
+  // console.log(request);
 
   ws.on('message', function (message) {
-    //
-    // Here we can now use session parameters.
-    //
     console.log(`Received message ${message}`);
+    var json = JSON.parse(message);
+    if(typeof(json.server_id) != 'undefined'){
+      ws.server_id = json.server_id;
+    }
   });
 
   ws.on('close', function () {
     console.log('ws.on close');
   });
 });
+
+wss.getUniqueID = function () {
+  return uuid();
+};
 
 
 
@@ -110,7 +112,20 @@ schedule.scheduleJob('*/15 * * * * *', async function () {
   if(wss.clients != undefined){
     wss.clients.forEach(function each(client) {
       if (client.readyState === WebSocket.OPEN) {
-        client.send('test');
+        let json = server_data.get(client.server_id);
+        if(typeof(json) != 'undefined'){
+          var players = json.players;
+          // let map_defaults = static_map_data.get('Ragnarok');
+          var markers = [];
+          for (var key in players) {
+            if (players.hasOwnProperty(key)) {
+              markers.push([players[key].x, players[key].y, awesomeMapIconName, MapPinColor, players[key].playername, players[key].tribename, players[key].z]);
+            }
+          }
+
+        }
+        console.log(markers);
+        client.send(JSON.stringify({ marker: markers }));
       }
     });
   } else {

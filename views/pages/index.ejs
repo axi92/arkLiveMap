@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="css/style.css" type="text/css" />
@@ -17,22 +15,11 @@
   <link rel="stylesheet" type="text/css"
     href="http://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/MarkerCluster.Default.css" />
 </head>
-
 <body>
-
   <div id='map'></div>
   <% if(map == 'Ragnarok'){ %>
-  <script>
-    var mapfile = '/images/ragnarok.jpg';
-    var bounds = [
-      [-700000, -700000],
-      [700000, 700000]
-    ];
-    var blueObelisk = [-427363, -416936, 'Blue obelisk'];
-    var greenObelisk = [92034, -155512, 'Green obelisk'];
-    var redObelisk = [-196153, 467466, 'Red obelisk'];
-  </script>
-  <% } else{ %>
+  <script src="/js/static/ragnarok.js"></script>
+  <% } else if(map == 'TheIsland'){ %>
 
   <% } %>
   <script>
@@ -45,9 +32,5 @@
   </script>
   <script src="/js/map.js"></script>
   <script src="/js/ws.js"></script>
-
-
-
 </body>
-
 </html>

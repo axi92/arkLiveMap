@@ -8,20 +8,8 @@ const uuid = require('uuid').v4;
 const app = express();
 const port = 8080;
 const server_data = new Map();
-const static_map_data = new Map();
 const awesomeMapIconName = 'user-o';
 const MapPinColor = 'darkblue';
-// static_map_data.set('Ragnarok', {
-//   bounds: [
-//     [-700000, -700000],
-//     [700000, 700000]
-//   ],
-//   'obelisks': {
-//     'blue': [-427363, -416936, 'Blue obelisk'],
-//     'red': [92034, -155512, 'Green obelisk'],
-//     'green': [-196153, 467466, 'Red obelisk']
-//   }
-// });
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.json());
@@ -33,7 +21,6 @@ app.get('/:id', (req, res) => {
   let json = server_data.get(req.params.id);
   if(typeof(json) != 'undefined'){
     var players = json.players;
-    // let map_defaults = static_map_data.get('Ragnarok');
     var markers = 'var mark = [';
     for (var key in players) {
       if (players.hasOwnProperty(key)) {
@@ -46,23 +33,28 @@ app.get('/:id', (req, res) => {
   if (markers == 'var mark = ];' || markers == undefined) {
     markers = 'var mark = [];';
   }
+  var mapName;
+  if(typeof json === 'undefined'){
+    mapName = 'Ragnarok';
+  } else {
+    if(json.map == 'TestMapArea'){
+      mapName = 'Ragnarok';
+    } else {
+      mapName = json.map;
+    }
+  }
 
   res.render('pages/index', {
-    map: 'Ragnarok',
-    // redObelisk: map_defaults.obelisks.redObelisk,
-    // greenObelisk: map_defaults.obelisks.greenObelisk,
-    // blueObelisk: map_defaults.obelisks.blueObelisk,
+    map: mapName,
     mark: markers
   });
 });
 
 app.post('/rest/v1', function (req, res) {
   // console.log(req.body);
-  console.log('data incomming...');
+  console.log('data incomming from ', req.body.serverid);
   server_data.set(req.body.serverid, req.body);
-  // console.log(server_data);
-  // res.send('Got a POST request')
-  // console.log('Map:', server_data);
+  // console.log(req.body);
 });
 
 
@@ -82,9 +74,9 @@ server.on('upgrade', function (request, socket, head) {
 });
 
 wss.on('connection', function (ws, request) {
-  console.log('wss on connection');
+  // console.log('wss on connection');
   ws.id = wss.getUniqueID();
-  console.log('websocket client id:', ws.id);
+  // console.log('websocket client id:', ws.id);
   ws.send(JSON.stringify({ id: ws.id}));
   // console.log(request);
 
@@ -105,9 +97,6 @@ wss.getUniqueID = function () {
   return uuid();
 };
 
-
-
-
 schedule.scheduleJob('*/15 * * * * *', async function () {
   if(wss.clients != undefined){
     wss.clients.forEach(function each(client) {
@@ -119,19 +108,18 @@ schedule.scheduleJob('*/15 * * * * *', async function () {
           var markers = [];
           for (var key in players) {
             if (players.hasOwnProperty(key)) {
-              markers.push([players[key].x, players[key].y, awesomeMapIconName, MapPinColor, players[key].playername, players[key].tribename, players[key].z]);
+              markers.push([players[key].x, players[key].y, awesomeMapIconName, MapPinColor, players[key].playername, players[key].tribename, players[key].x_ue4, players[key].y_ue4, players[key].z_ue4]);
             }
           }
 
         }
-        console.log(markers);
+        console.log('Markers:', markers)
         client.send(JSON.stringify({ marker: markers }));
       }
     });
   } else {
     console.log('no clients connected');
   }
-
 });
 
 server.listen(port, function () {

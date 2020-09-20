@@ -34,16 +34,16 @@ app.get('/:id', (req, res) => {
     markers = 'var mark = [];';
   }
   var mapName;
-  if(typeof json === 'undefined'){
+  if(typeof json === 'undefined'){ // if no data is present from the server take ragnarok
     mapName = 'Ragnarok';
   } else {
-    if(json.map == 'TestMapArea'){
+    if(json.map == 'TestMapArea'){ // debug on testmap also ragnarok
       mapName = 'Ragnarok';
     } else {
       mapName = json.map;
     }
   }
-
+  console.log(mapName);
   res.render('pages/index', {
     map: mapName,
     mark: markers
@@ -104,7 +104,6 @@ schedule.scheduleJob('*/15 * * * * *', async function () {
         let json = server_data.get(client.server_id);
         if(typeof(json) != 'undefined'){
           var players = json.players;
-          // let map_defaults = static_map_data.get('Ragnarok');
           var markers = [];
           for (var key in players) {
             if (players.hasOwnProperty(key)) {

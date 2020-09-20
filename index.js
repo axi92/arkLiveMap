@@ -4,12 +4,21 @@ const bodyParser = require('body-parser');
 const WebSocket = require('ws');
 const schedule = require('node-schedule');
 const uuid = require('uuid').v4;
+const low = require('lowdb');
+const FileSync = require('lowdb/adapters/FileSync');
 
+const adapter = new FileSync('db.json');
+const db = low(adapter);
 const app = express();
 const port = 8080;
 const server_data = new Map();
 const awesomeMapIconName = 'user-o';
 const MapPinColor = 'darkblue';
+
+db.defaults({
+    servers: []
+  })
+  .write();
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.json());
@@ -19,7 +28,7 @@ app.use('/js', express.static('views/js'));
 app.get('/:id', (req, res) => {
   if (req.params.id == 'favicon.ico') return;
   let json = server_data.get(req.params.id);
-  if(typeof(json) != 'undefined'){
+  if (typeof (json) != 'undefined') {
     var players = json.players;
     var markers = 'var mark = [';
     for (var key in players) {
@@ -34,10 +43,10 @@ app.get('/:id', (req, res) => {
     markers = 'var mark = [];';
   }
   var mapName;
-  if(typeof json === 'undefined'){ // if no data is present from the server take ragnarok
+  if (typeof json === 'undefined') { // if no data is present from the server take ragnarok
     mapName = 'Ragnarok';
   } else {
-    if(json.map == 'TestMapArea'){ // debug on testmap also ragnarok
+    if (json.map == 'TestMapArea') { // debug on testmap also ragnarok
       mapName = 'Ragnarok';
     } else {
       mapName = json.map;
@@ -51,10 +60,18 @@ app.get('/:id', (req, res) => {
 });
 
 app.post('/rest/v1', function (req, res) {
-  // console.log(req.body);
-  console.log('data incomming from ', req.body.serverid);
-  server_data.set(req.body.serverid, req.body);
-  // console.log(req.body);
+  console.log('incomming data');
+  var entry = db.get('servers')
+  .find({
+    privateid: req.body.privateid
+  })
+  .value();
+  if(entry === undefined){
+    res.send('{ response: 1, error: "Not authorized" }');
+  } else {
+    server_data.set(entry.publicid, req.body);
+    res.send('{ response: 0, error: "" }');
+  }
 });
 
 
@@ -77,13 +94,15 @@ wss.on('connection', function (ws, request) {
   // console.log('wss on connection');
   ws.id = wss.getUniqueID();
   // console.log('websocket client id:', ws.id);
-  ws.send(JSON.stringify({ id: ws.id}));
+  ws.send(JSON.stringify({
+    id: ws.id
+  }));
   // console.log(request);
 
   ws.on('message', function (message) {
     console.log(`Received message ${message}`);
     var json = JSON.parse(message);
-    if(typeof(json.server_id) != 'undefined'){
+    if (typeof (json.server_id) != 'undefined') {
       ws.server_id = json.server_id;
     }
   });
@@ -98,11 +117,11 @@ wss.getUniqueID = function () {
 };
 
 schedule.scheduleJob('*/15 * * * * *', async function () {
-  if(wss.clients != undefined){
+  if (wss.clients != undefined) {
     wss.clients.forEach(function each(client) {
       if (client.readyState === WebSocket.OPEN) {
         let json = server_data.get(client.server_id);
-        if(typeof(json) != 'undefined'){
+        if (typeof (json) != 'undefined') {
           var players = json.players;
           var markers = [];
           for (var key in players) {
@@ -113,7 +132,9 @@ schedule.scheduleJob('*/15 * * * * *', async function () {
 
         }
         console.log('Markers:', markers)
-        client.send(JSON.stringify({ marker: markers }));
+        client.send(JSON.stringify({
+          marker: markers
+        }));
       }
     });
   } else {
@@ -124,4 +145,3 @@ schedule.scheduleJob('*/15 * * * * *', async function () {
 server.listen(port, function () {
   console.log(`Listening on http://localhost:${port}`);
 });
-

@@ -28,7 +28,7 @@ ws.onmessage = function (event) {
     mark = json.marker;
     markerLength = mark.length;
     for (i = 0; i < markerLength; i++) {
-      var m = L.marker([100 - parseFloat(mark[i][0]), parseFloat(mark[i][1])], {
+      var m = L.marker([100 - parseFloat(mark[i][1]), parseFloat(mark[i][0])], {
         icon: L.AwesomeMarkers.icon({
           icon: mark[i][2],
           prefix: 'fa',

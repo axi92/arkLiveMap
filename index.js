@@ -53,7 +53,7 @@ app.get('/:id', (req, res) => {
   if (markers == 'var mark = ];' || markers == undefined) {
     markers = 'var mark = [];';
   }
-  if (tribe_markers == 'var mark = ];' || tribe_markers == undefined) {
+  if (tribe_markers == 'var tribe_mark = ];' || tribe_markers == undefined) {
     tribe_markers = 'var tribe_mark = [];';
   }
   var mapName;

@@ -12,8 +12,10 @@ const db = low(adapter);
 const app = express();
 const port = 8080;
 const server_data = new Map();
-const awesomeMapIconName = 'user-o';
-const MapPinColor = 'darkblue';
+const awesomeMapIconPlayer = 'user-o';
+const PlayerPinColor = 'darkblue';
+const awesomeMapIconTribe = 'home';
+const TribePinColor = 'orange';
 
 db.defaults({
     servers: []
@@ -30,17 +32,29 @@ app.get('/:id', (req, res) => {
   let json = server_data.get(req.params.id);
   if (typeof (json) != 'undefined') {
     var players = json.players;
+    var tribes = json.tribes;
+    var tribe_markers = 'var tribe_mark = [';
     var markers = 'var mark = [';
     for (var key in players) {
       if (players.hasOwnProperty(key)) {
-        markers += '[' + players[key].x + ',' + players[key].y + ',"' + awesomeMapIconName + '","' + MapPinColor + '","' + players[key].playername + '","' + players[key].tribename + '",' + players[key].z + '],';
+        markers += '[' + players[key].x + ',' + players[key].y + ',"' + awesomeMapIconPlayer + '","' + PlayerPinColor + '","' + players[key].playername + '","' + players[key].tribename + '",' + players[key].z + '],';
       }
     }
     markers = markers.slice(0, -1); // slice the last ","
     markers += '];';
+    for (var key in tribes) {
+      if (tribes.hasOwnProperty(key)) {
+        tribe_markers += '[' + tribes[key].x + ',' + tribes[key].y + ',"' + awesomeMapIconTribe + '","' + TribePinColor + '","' + tribes[key].tribename + '","' + tribes[key].tribename + '",' + tribes[key].z + '],';
+      }
+    }
+    tribe_markers = tribe_markers.slice(0, -1); // slice the last ","
+    tribe_markers += '];';
   }
   if (markers == 'var mark = ];' || markers == undefined) {
     markers = 'var mark = [];';
+  }
+  if (tribe_markers == 'var mark = ];' || tribe_markers == undefined) {
+    tribe_markers = 'var mark = [];';
   }
   var mapName;
   if (typeof json === 'undefined') { // if no data is present from the server take ragnarok
@@ -55,7 +69,8 @@ app.get('/:id', (req, res) => {
   console.log(mapName);
   res.render('pages/index', {
     map: mapName,
-    mark: markers
+    mark: markers,
+    tribe_markers: tribe_markers
   });
 });
 
@@ -122,18 +137,28 @@ schedule.scheduleJob('*/15 * * * * *', async function () {
       if (client.readyState === WebSocket.OPEN) {
         let json = server_data.get(client.server_id);
         if (typeof (json) != 'undefined') {
+          // Players
           var players = json.players;
           var markers = [];
           for (var key in players) {
             if (players.hasOwnProperty(key)) {
-              markers.push([players[key].x, players[key].y, awesomeMapIconName, MapPinColor, players[key].playername, players[key].tribename, players[key].x_ue4, players[key].y_ue4, players[key].z_ue4]);
+              markers.push([players[key].x, players[key].y, awesomeMapIconPlayer, PlayerPinColor, players[key].playername, players[key].tribename, players[key].x_ue4, players[key].y_ue4, players[key].z_ue4]);
             }
           }
-
+          // Tribes
+          var tribes = json.tribes;
+          var tribe_markers = [];
+          for (var key in tribes) {
+            if (tribes.hasOwnProperty(key)) {
+              tribe_markers.push([tribes[key].x, tribes[key].y, awesomeMapIconTribe, TribePinColor, tribes[key].tribename, tribes[key].tribename, tribes[key].x_ue4, tribes[key].y_ue4, tribes[key].z_ue4]);
+            }
+          }
         }
-        console.log('Markers:', markers)
+        console.log('Markers:', markers);
+        console.log('Tribes:', tribe_markers);
         client.send(JSON.stringify({
-          marker: markers
+          marker: markers,
+          tribe_markers: tribe_markers
         }));
       }
     });

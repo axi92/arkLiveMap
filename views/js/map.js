@@ -50,5 +50,17 @@ for (i = 0; i < markerLength; i++) {
   markerClusters.addLayer( m );
 }
 
+markerLength = tribe_mark.length;
+for (i = 0; i < markerLength; i++) {
+  var m = L.marker([100 - tribe_mark[i][0], tribe_mark[i][1]], {
+    icon: L.AwesomeMarkers.icon({
+      icon: tribe_mark[i][2],
+      prefix: 'fa',
+      markerColor: tribe_mark[i][3]
+    })
+  }).bindPopup(tribe_mark[i][4] + '<br /><!-- cheat setplayerpos ' + tribe_mark[i][1].toFixed(0) + ' ' + tribe_mark[i][0].toFixed(0) + ' ' + (tribe_mark[i][6] + 50).toFixed(0) + '--> <br />' + tribe_mark[i][5]); // .addTo(map)
+  markerClusters.addLayer( m );
+}
+
 map.setView([50, 50], 3);
 map.addLayer( markerClusters );

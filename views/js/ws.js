@@ -25,6 +25,7 @@ ws.onmessage = function (event) {
     ws.send(JSON.stringify({ server_id: server_id }));
   } else if(typeof(json.marker) != 'undefined'){
     markerClusters.clearLayers(); // Clear all markers on map
+    // Players:
     mark = json.marker;
     markerLength = mark.length;
     for (i = 0; i < markerLength; i++) {
@@ -35,6 +36,19 @@ ws.onmessage = function (event) {
           markerColor: mark[i][3]
         })
       }).bindPopup(mark[i][4] + '<br /><!-- cheat setplayerpos ' + parseFloat(mark[i][1]).toFixed(0) + ' ' + parseFloat(mark[i][0]).toFixed(0) + ' ' + (parseFloat(mark[i][6]) + 50).toFixed(0) + '--><br />' + mark[i][5]);
+      markerClusters.addLayer( m );
+    }
+    // Tribes:
+    tribe_mark = json.tribe_markers;
+    markerLength = tribe_mark.length;
+    for (i = 0; i < markerLength; i++) {
+      var m = L.marker([100 - parseFloat(tribe_mark[i][1]), parseFloat(tribe_mark[i][0])], {
+        icon: L.AwesomeMarkers.icon({
+          icon: tribe_mark[i][2],
+          prefix: 'fa',
+          markerColor: tribe_mark[i][3]
+        })
+      }).bindPopup(tribe_mark[i][4] + '<br /><!-- cheat setplayerpos ' + parseFloat(tribe_mark[i][1]).toFixed(0) + ' ' + parseFloat(tribe_mark[i][0]).toFixed(0) + ' ' + (parseFloat(tribe_mark[i][6]) + 50).toFixed(0) + '--><br />' + tribe_mark[i][5]);
       markerClusters.addLayer( m );
     }
   }

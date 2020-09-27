@@ -54,7 +54,7 @@ app.get('/:id', (req, res) => {
     markers = 'var mark = [];';
   }
   if (tribe_markers == 'var mark = ];' || tribe_markers == undefined) {
-    tribe_markers = 'var mark = [];';
+    tribe_markers = 'var tribe_mark = [];';
   }
   var mapName;
   if (typeof json === 'undefined') { // if no data is present from the server take ragnarok

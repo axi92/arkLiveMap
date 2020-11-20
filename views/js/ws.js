@@ -35,7 +35,7 @@ ws.onmessage = function (event) {
           prefix: 'fa',
           markerColor: mark[i][3]
         })
-      }).bindPopup(mark[i][4] + '<br />cheat setplayerpos ' + Math.trunc(mark[i][6]) + ' ' + Math.trunc(mark[i][7]) + ' ' + Math.trunc(mark[i][8])+1000 + '<br />' + mark[i][5]);
+      }).bindPopup(mark[i][4] + '<br />cheat setplayerpos ' + Math.trunc(mark[i][6]) + ' ' + Math.trunc(mark[i][7]) + ' ' + (parseInt(Math.trunc(mark[i][8])) + parseInt(1000)) + '<br />' + mark[i][5]);
       markerClusters.addLayer( m );
     }
     // Tribes:
@@ -48,7 +48,7 @@ ws.onmessage = function (event) {
           prefix: 'fa',
           markerColor: tribe_mark[i][3]
         })
-      }).bindPopup(tribe_mark[i][4] + '<br />cheat setplayerpos ' + Math.trunc(tribe_mark[i][6]) + ' ' + Math.trunc(tribe_mark[i][7]) + ' ' + Math.trunc(tribe_mark[i][8])+1000 + '<br />' + tribe_mark[i][5]);
+      }).bindPopup(tribe_mark[i][4] + '<br />cheat setplayerpos ' + Math.trunc(tribe_mark[i][6]) + ' ' + Math.trunc(tribe_mark[i][7]) + ' ' + (parseInt(Math.trunc(tribe_mark[i][8])) + parseInt(1000)) + '<br />' + tribe_mark[i][5]);
       markerClusters.addLayer( m );
     }
   }

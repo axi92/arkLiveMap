@@ -37,14 +37,14 @@ app.get('/:id', (req, res) => {
     var markers = 'var mark = [';
     for (var key in players) {
       if (players.hasOwnProperty(key)) {
-        markers += '[' + players[key].y + ',' + players[key].x + ',"' + awesomeMapIconPlayer + '","' + PlayerPinColor + '","' + players[key].playername + '","' + players[key].tribename + '",' + players[key].z_ue4 + '],';
+        markers += '[' + players[key].y + ',' + players[key].x + ',"' + awesomeMapIconPlayer + '","' + PlayerPinColor + '","' + players[key].playername + '","' + players[key].tribename + '",' + players[key].x_ue4 + ',' + players[key].y_ue4 + ',' + players[key].z_ue4 + '],';
       }
     }
     markers = markers.slice(0, -1); // slice the last ","
     markers += '];';
     for (var key in tribes) {
       if (tribes.hasOwnProperty(key)) {
-        tribe_markers += '[' + tribes[key].y + ',' + tribes[key].x + ',"' + awesomeMapIconTribe + '","' + TribePinColor + '","' + tribes[key].tribename + '","' + tribes[key].tribename + '",' + tribes[key].z_ue4 + '],';
+        tribe_markers += '[' + tribes[key].y + ',' + tribes[key].x + ',"' + awesomeMapIconTribe + '","' + TribePinColor + '","' + tribes[key].tribename + '","' + tribes[key].tribename + '",' + tribes[key].x_ue4 + ',' + tribes[key].y_ue4 + ',' + tribes[key].z_ue4 + '],';
       }
     }
     tribe_markers = tribe_markers.slice(0, -1); // slice the last ","

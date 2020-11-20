@@ -46,7 +46,7 @@ for (i = 0; i < markerLength; i++) {
       prefix: 'fa',
       markerColor: mark[i][3]
     })
-  }).bindPopup(mark[i][4] + '<br /><!-- cheat setplayerpos ' + mark[i][1].toFixed(0) + ' ' + mark[i][0].toFixed(0) + ' ' + (mark[i][6] + 50).toFixed(0) + '--> <br />' + mark[i][5]); // .addTo(map)
+  }).bindPopup(mark[i][4] + '<br />cheat setplayerpos ' + Math.trunc(mark[i][6]) + ' ' + Math.trunc(mark[i][7]) + ' ' + Math.trunc(mark[i][8])+1000 + '<br />' + mark[i][5]); // .addTo(map)
   markerClusters.addLayer( m );
 }
 
@@ -58,7 +58,7 @@ for (i = 0; i < markerLength; i++) {
       prefix: 'fa',
       markerColor: tribe_mark[i][3]
     })
-  }).bindPopup(tribe_mark[i][4] + '<br /><!-- cheat setplayerpos ' + tribe_mark[i][1].toFixed(0) + ' ' + tribe_mark[i][0].toFixed(0) + ' ' + (tribe_mark[i][6] + 50).toFixed(0) + '--> <br />' + tribe_mark[i][5]); // .addTo(map)
+  }).bindPopup(tribe_mark[i][4] + '<br />cheat setplayerpos ' + Math.trunc(tribe_mark[i][6]) + ' ' + Math.trunc(tribe_mark[i][7]) + ' ' + Math.trunc(tribe_mark[i][8])+1000 + '<br />' + tribe_mark[i][5]); // .addTo(map)
   markerClusters.addLayer( m );
 }
 

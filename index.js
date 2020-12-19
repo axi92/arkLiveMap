@@ -154,12 +154,18 @@ schedule.scheduleJob('*/15 * * * * *', async function () {
               tribe_markers.push([tribes[key].x, tribes[key].y, awesomeMapIconTribe, TribePinColor, tribes[key].tribename, tribes[key].tribename, tribes[key].x_ue4, tribes[key].y_ue4, tribes[key].z_ue4]);
             }
           }
+          // Serverclock
+          var serverclock = '??:??'
+          if(typeof(json.serverclock) != 'undefined' ){
+            serverclock = json.serverclock;
+          }
         }
         console.log('Markers:', markers);
         console.log('Tribes:', tribe_markers);
         client.send(JSON.stringify({
           marker: markers,
-          tribe_markers: tribe_markers
+          tribe_markers: tribe_markers,
+          serverclock: serverclock
         }));
       }
     });

@@ -16,6 +16,7 @@ ws.onclose = function () {
 };
 
 ws.onmessage = function (event) {
+  console.log('ws onmessage');
   var json = JSON.parse(event.data);
   if(typeof(json.id) != 'undefined'){
     id = json.id;
@@ -51,5 +52,11 @@ ws.onmessage = function (event) {
       }).bindPopup(tribe_mark[i][4] + '<br />cheat setplayerpos ' + Math.trunc(tribe_mark[i][6]) + ' ' + Math.trunc(tribe_mark[i][7]) + ' ' + (parseInt(Math.trunc(tribe_mark[i][8])) + parseInt(1000)) + '<br />' + tribe_mark[i][5]);
       markerClusters.addLayer( m );
     }
+  }
+  // After everything was updated update the time
+  if(typeof(json.serverlock) == 'undefined'){
+    document.getElementById("clock").innerHTML = '??:??';
+  } else {
+    document.getElementById("clock").innerHTML = json.serverclock;
   }
 }

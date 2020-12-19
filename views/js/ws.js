@@ -1,7 +1,11 @@
 var url = window.location.href;
 url = url.replace('http://', '');
 url = url.replace('https://', '');
-var ws = new WebSocket('ws://' + url);
+if (window.location.protocol == "https:") {
+  var ws = new WebSocket('wss://' + url);
+} else {
+  var ws = new WebSocket('ws://' + url);
+}
 var id;
 
 ws.onerror = function () {

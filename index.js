@@ -23,6 +23,7 @@ db.defaults({
   .write();
 
 app.set('view engine', 'ejs');
+app.use(bodyParser.json({limit: '50mb'}))
 app.use(bodyParser.json());
 app.use('/images', express.static('views/images'));
 app.use('/css', express.static('views/css'));
@@ -75,7 +76,7 @@ app.get('/:id', (req, res) => {
 });
 
 app.post('/rest/v1', function (req, res) {
-  console.log('incomming data');
+  console.log('incomming data from:', req.body.servername);
   var entry = db.get('servers')
   .find({
     privateid: req.body.privateid

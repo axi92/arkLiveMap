@@ -34,6 +34,7 @@ app.get('/:id', (req, res) => {
   if (typeof (json) != 'undefined') {
     var players = json.players;
     var tribes = json.tribes;
+    var servername = json.servername;
     var tribe_markers = 'var tribe_mark = [';
     var markers = 'var mark = [';
     for (var key in players) {
@@ -71,7 +72,8 @@ app.get('/:id', (req, res) => {
   res.render('pages/index', {
     map: mapName,
     mark: markers,
-    tribe_markers: tribe_markers
+    tribe_markers: tribe_markers,
+    title: servername
   });
 });
 

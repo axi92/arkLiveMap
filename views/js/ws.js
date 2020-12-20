@@ -58,9 +58,10 @@ ws.onmessage = function (event) {
     }
   }
   // After everything was updated update the time
-  if(typeof(json.serverlock) == 'undefined'){
-    document.getElementById("clock").innerHTML = '??:??';
+  if(typeof(json.serverclock) == 'undefined'){
+    document.getElementById("clock").innerHTML = 'Day ?, ??:??:??';
   } else {
+    console.log('clock set now!');
     document.getElementById("clock").innerHTML = json.serverclock;
   }
 }

@@ -160,8 +160,8 @@ schedule.scheduleJob('*/15 * * * * *', async function () {
             serverclock = json.serverclock;
           }
         }
-        console.log('Markers:', markers);
-        console.log('Tribes:', tribe_markers);
+        //console.log('Markers:', markers);
+        //console.log('Tribes:', tribe_markers);
         client.send(JSON.stringify({
           marker: markers,
           tribe_markers: tribe_markers,

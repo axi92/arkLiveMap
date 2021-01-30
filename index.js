@@ -16,6 +16,7 @@ const awesomeMapIconPlayer = 'user-o';
 const PlayerPinColor = 'darkblue';
 const awesomeMapIconTribe = 'home';
 const TribePinColor = 'orange';
+const TribePinColorExpired = 'red';
 
 db.defaults({
     servers: []
@@ -46,7 +47,14 @@ app.get('/:id', (req, res) => {
     markers += '];';
     for (var key in tribes) {
       if (tribes.hasOwnProperty(key)) {
-        tribe_markers += '[' + tribes[key].y + ',' + tribes[key].x + ',"' + awesomeMapIconTribe + '","' + TribePinColor + '","' + tribes[key].tribename + '","' + tribes[key].tribename + '",' + tribes[key].x_ue4 + ',' + tribes[key].y_ue4 + ',' + tribes[key].z_ue4 + '],';
+        let lastStructureUpdateTime = (Math.trunc(tribes[key].elapsedTime) - Math.trunc(tribes[key].lastInAllyRangeTime))/60/60/24; // convert seconds to days
+        let localTribePinColor
+        if(lastStructureUpdateTime > 20) {
+          localTribePinColor = TribePinColorExpired;
+        } else {
+          localTribePinColor = TribePinColor;
+        }
+        tribe_markers += '[' + tribes[key].y + ',' + tribes[key].x + ',"' + awesomeMapIconTribe + '","' + localTribePinColor + '","' + tribes[key].tribename + '","' + tribes[key].tribename + '",' + tribes[key].x_ue4 + ',' + tribes[key].y_ue4 + ',' + tribes[key].z_ue4 + ',' + lastStructureUpdateTime + '],';
       }
     }
     tribe_markers = tribe_markers.slice(0, -1); // slice the last ","
@@ -88,6 +96,10 @@ app.post('/rest/v1', function (req, res) {
     res.send('{ response: 1, error: "Not authorized" }');
   } else {
     server_data.set(entry.publicid, req.body);
+    // if(req.body.servername == 'The Sunny Side of ARK:TEST') {
+    // if(req.body.servername == 'The Sunny Side of ARK:Center[T5/XP5/B30/H6]') {
+    //   console.log(req.body.tribes);
+    // }
     res.send('{ response: 0, error: "" }');
   }
 });
@@ -153,7 +165,14 @@ schedule.scheduleJob('*/15 * * * * *', async function () {
           var tribe_markers = [];
           for (var key in tribes) {
             if (tribes.hasOwnProperty(key)) {
-              tribe_markers.push([tribes[key].x, tribes[key].y, awesomeMapIconTribe, TribePinColor, tribes[key].tribename, tribes[key].tribename, tribes[key].x_ue4, tribes[key].y_ue4, tribes[key].z_ue4]);
+              let lastStructureUpdateTime = (Math.trunc(tribes[key].elapsedTime) - Math.trunc(tribes[key].lastInAllyRangeTime))/60/60/24; // convert seconds to days
+              let localTribePinColor
+              if(lastStructureUpdateTime > 20) {
+                localTribePinColor = TribePinColorExpired;
+              } else {
+                localTribePinColor = TribePinColor;
+              }
+              tribe_markers.push([tribes[key].x, tribes[key].y, awesomeMapIconTribe, localTribePinColor, tribes[key].tribename, tribes[key].tribename, tribes[key].x_ue4, tribes[key].y_ue4, tribes[key].z_ue4, lastStructureUpdateTime]);
             }
           }
           // Serverclock

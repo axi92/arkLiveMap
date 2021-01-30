@@ -58,7 +58,7 @@ for (i = 0; i < markerLength; i++) {
       prefix: 'fa',
       markerColor: tribe_mark[i][3]
     })
-  }).bindPopup(tribe_mark[i][4] + '<br />cheat setplayerpos ' + Math.trunc(tribe_mark[i][6]) + ' ' + Math.trunc(tribe_mark[i][7]) + ' ' + (parseInt(Math.trunc(tribe_mark[i][8])) + parseInt(1000)) + '<br />' + tribe_mark[i][5]); // .addTo(map)
+  }).bindPopup(tribe_mark[i][4] + '<br />cheat setplayerpos ' + Math.trunc(tribe_mark[i][6]) + ' ' + Math.trunc(tribe_mark[i][7]) + ' ' + (parseInt(Math.trunc(tribe_mark[i][8])) + parseInt(1000)) + '<br />' + (tribe_mark[i][9]).toFixed(2) + ' days not updated'); // .addTo(map)
   markerClusters.addLayer( m );
 }
 

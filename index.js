@@ -167,7 +167,7 @@ schedule.scheduleJob('*/15 * * * * *', async function () {
             if (tribes.hasOwnProperty(key)) {
               let lastStructureUpdateTime = (Math.trunc(tribes[key].elapsedTime) - Math.trunc(tribes[key].lastInAllyRangeTime))/60/60/24; // convert seconds to days
               let localTribePinColor
-              if(lastStructureUpdateTime > 20) {
+              if(lastStructureUpdateTime >= 17) {
                 localTribePinColor = TribePinColorExpired;
               } else {
                 localTribePinColor = TribePinColor;

@@ -64,3 +64,22 @@ for (i = 0; i < markerLength; i++) {
 
 map.setView([50, 50], 3);
 map.addLayer( markerClusters );
+
+// Create sidebarjs instance
+const sidebarjs = new SidebarJS.SidebarElement({
+  /*
+   * All available options:
+   * https://github.com/SidebarJS/sidebarjs#options
+   */
+  position: 'right'
+});
+
+
+var positioned = L.easyButton('fa-bars', function(){
+  document.getElementById("sidebar").style.zIndex = "9999";
+  // alert('you clicked the circle')
+  sidebarjs.toggle();
+}, 'title', {
+  position: 'topright'
+});
+positioned.addTo(map);

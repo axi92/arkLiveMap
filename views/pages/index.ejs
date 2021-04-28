@@ -16,9 +16,11 @@
 </head>
 
 <body>
-  <div id="sidebar" class="js--sidebarjs-toggle" sidebarjs>
-    <a href="https://discord.com/api/oauth2/authorize?client_id=819001757949493269&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fauth%2Fdiscord%2Fcallback&response_type=code&scope=identify%20email">Login</a>
-  </div>
+  <!--
+    <div id="sidebar" class="js--sidebarjs-toggle" sidebarjs>
+      <a href="https://discord.com/api/oauth2/authorize?client_id=819001757949493269&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fauth%2Fdiscord%2Fcallback&response_type=code&scope=identify%20email">Login</a>
+    </div>
+  -->
   <div class="largeclock timeofday">
     <div class="timeofday digitalclock" id="clock">Day ?, ??:??:??</div>
   </div>
@@ -41,6 +43,8 @@
   <script src="/js/static/extinction.js"></script>
   <% } else if(map == 'Genesis'){ %>
   <script src="/js/static/genesis.js"></script>
+  <% } else if(map == 'Fjoerdur'){ %>
+    <script src="/js/static/fjoerdur.js"></script>
   <% } %>
   <script>
     <%- mark %>

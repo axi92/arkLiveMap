@@ -222,7 +222,7 @@ schedule.scheduleJob('*/15 * * * * *', async function () {
           var markers = [];
           for (var key in players) {
             if (players.hasOwnProperty(key)) {
-              markers.push([players[key].x, players[key].y, awesomeMapIconPlayer, PlayerPinColor, players[key].playername, players[key].tribename, players[key].x_ue4, players[key].y_ue4, players[key].z_ue4]);
+              markers.push([players[key].x, players[key].y, awesomeMapIconPlayer, PlayerPinColor, escape(players[key].playername), escape(players[key].tribename), players[key].x_ue4, players[key].y_ue4, players[key].z_ue4]);
             }
           }
           // Tribes
@@ -237,7 +237,7 @@ schedule.scheduleJob('*/15 * * * * *', async function () {
               } else {
                 localTribePinColor = TribePinColor;
               }
-              tribe_markers.push([tribes[key].x, tribes[key].y, awesomeMapIconTribe, localTribePinColor, tribes[key].tribename, tribes[key].tribename, tribes[key].x_ue4, tribes[key].y_ue4, tribes[key].z_ue4, lastStructureUpdateTime]);
+              tribe_markers.push([tribes[key].x, tribes[key].y, awesomeMapIconTribe, localTribePinColor, escape(tribes[key].tribename), escape(tribes[key].tribename), tribes[key].x_ue4, tribes[key].y_ue4, tribes[key].z_ue4, lastStructureUpdateTime]);
             }
           }
           // Serverclock

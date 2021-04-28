@@ -1,4 +1,5 @@
 const express = require('express');
+const session = require('express-session');
 const http = require('http');
 const bodyParser = require('body-parser');
 const WebSocket = require('ws');
@@ -6,6 +7,21 @@ const schedule = require('node-schedule');
 const uuid = require('uuid').v4;
 const low = require('lowdb');
 const FileSync = require('lowdb/adapters/FileSync');
+const config = require('./config.js');
+const passport = require('passport');
+const DiscordStrategy = require('passport-discord').Strategy;
+// const refresh = require('passport-oauth2-refresh');
+
+passport.serializeUser(function (user, done) {
+  done(null, user);
+});
+passport.deserializeUser(function (obj, done) {
+  done(null, obj);
+});
+
+// https://github.com/Automattic/mongoose
+// https://www.npmjs.com/package/mongoose-findorcreate
+// https://github.com/jaredhanson/passport-facebook/issues/152
 
 const adapter = new FileSync('db.json');
 const db = low(adapter);
@@ -17,6 +33,34 @@ const PlayerPinColor = 'darkblue';
 const awesomeMapIconTribe = 'home';
 const TribePinColor = 'orange';
 const TribePinColorExpired = 'red';
+const scopes = ['identify', 'email'];
+
+var discordStrat = new DiscordStrategy({
+    clientID: config.clientId,
+    clientSecret: config.clientSecret,
+    callbackURL: config.redirectUri,
+    scope: scopes,
+    prompt: 'consent'
+  },
+  function (accessToken, refreshToken, profile, done) {
+    console.log(accessToken, refreshToken, profile);
+    // User.findOrCreate({
+    //   discordId: profile.id
+    // }, function (err, user) {
+    // });
+    console.log(typeof profile);
+    process.nextTick(function () {
+      return done(null, profile);
+    });
+  });
+passport.use(discordStrat);
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 db.defaults({
     servers: []
@@ -24,11 +68,32 @@ db.defaults({
   .write();
 
 app.set('view engine', 'ejs');
-app.use(bodyParser.json({limit: '50mb'}))
+app.use(bodyParser.json({
+  limit: '50mb'
+}))
 app.use(bodyParser.json());
 app.use('/images', express.static('views/images'));
 app.use('/css', express.static('views/css'));
 app.use('/js', express.static('views/js'));
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.get('/auth/discord', passport.authenticate('discord', { scope: scopes, prompt: 'consent' }), function(req, res) {});
+app.get('/auth/discord/callback', passport.authenticate('discord', { // redirect url for discord
+  failureRedirect: '/'
+}), function (req, res) {
+  res.redirect('/info') // Successful auth
+});
+
+app.get('/info', checkAuth, function(req, res) {
+  //console.log(req.user)
+  res.json(req.user);
+});
+function checkAuth(req, res, next) {
+  if (req.isAuthenticated()) return next();
+  res.send('not logged in :(');
+}
+
 app.get('/:id', (req, res) => {
   if (req.params.id == 'favicon.ico') return;
   let json = server_data.get(req.params.id);
@@ -47,9 +112,9 @@ app.get('/:id', (req, res) => {
     markers += '];';
     for (var key in tribes) {
       if (tribes.hasOwnProperty(key)) {
-        let lastStructureUpdateTime = (Math.trunc(tribes[key].elapsedTime) - Math.trunc(tribes[key].lastInAllyRangeTime))/60/60/24; // convert seconds to days
+        let lastStructureUpdateTime = (Math.trunc(tribes[key].elapsedTime) - Math.trunc(tribes[key].lastInAllyRangeTime)) / 60 / 60 / 24; // convert seconds to days
         let localTribePinColor
-        if(lastStructureUpdateTime > 20) {
+        if (lastStructureUpdateTime > 20) {
           localTribePinColor = TribePinColorExpired;
         } else {
           localTribePinColor = TribePinColor;
@@ -88,11 +153,11 @@ app.get('/:id', (req, res) => {
 app.post('/rest/v1', function (req, res) {
   console.log('incomming data from:', req.body.servername);
   var entry = db.get('servers')
-  .find({
-    privateid: req.body.privateid
-  })
-  .value();
-  if(entry === undefined){
+    .find({
+      privateid: req.body.privateid
+    })
+    .value();
+  if (entry === undefined) {
     res.send('{ response: 1, error: "Not authorized" }');
   } else {
     server_data.set(entry.publicid, req.body);
@@ -165,9 +230,9 @@ schedule.scheduleJob('*/15 * * * * *', async function () {
           var tribe_markers = [];
           for (var key in tribes) {
             if (tribes.hasOwnProperty(key)) {
-              let lastStructureUpdateTime = (Math.trunc(tribes[key].elapsedTime) - Math.trunc(tribes[key].lastInAllyRangeTime))/60/60/24; // convert seconds to days
+              let lastStructureUpdateTime = (Math.trunc(tribes[key].elapsedTime) - Math.trunc(tribes[key].lastInAllyRangeTime)) / 60 / 60 / 24; // convert seconds to days
               let localTribePinColor
-              if(lastStructureUpdateTime >= 17) {
+              if (lastStructureUpdateTime >= 17) {
                 localTribePinColor = TribePinColorExpired;
               } else {
                 localTribePinColor = TribePinColor;
@@ -177,7 +242,7 @@ schedule.scheduleJob('*/15 * * * * *', async function () {
           }
           // Serverclock
           var serverclock = '??:??'
-          if(typeof(json.serverclock) != 'undefined' ){
+          if (typeof (json.serverclock) != 'undefined') {
             serverclock = json.serverclock;
           }
         }

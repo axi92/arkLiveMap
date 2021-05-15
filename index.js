@@ -162,8 +162,8 @@ app.post('/rest/v1', function (req, res) {
   } else {
     server_data.set(entry.publicid, req.body);
     // if(req.body.servername == 'The Sunny Side of ARK:TEST') {
-    // if(req.body.servername == 'The Sunny Side of ARK:Center[T5/XP5/B30/H6]') {
-    //   console.log(req.body.tribes);
+    // if(req.body.servername == 'The Sunny Side of ARK:PrimalFear [Longtime] Olympus') {
+    //   console.log(req.body);
     // }
     res.send('{ response: 0, error: "" }');
   }

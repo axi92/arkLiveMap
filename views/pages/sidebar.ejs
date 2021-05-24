@@ -1,0 +1,9 @@
+<div id="sidebar" class="js--sidebarjs-toggle" sidebarjs>
+  <% if(auth == 1){ %>
+    You are authenticated with steam!
+    <%- authdata._json.steamid %>
+  <% } else { %>
+    <!-- <a href="http://localhost:8080/auth/discord">Login with Discord</a> -->
+    <a href="http://localhost:8080/auth/steam">Login with Steam</a>
+  <% } %>
+</div>

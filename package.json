@@ -17,6 +17,7 @@
     "passport": "^0.4.1",
     "passport-discord": "^0.1.4",
     "passport-oauth2-refresh": "^2.0.1",
+    "passport-steam": "^1.0.15",
     "uuid": "^8.3.0",
     "websocket": "^1.0.32",
     "ws": "^7.3.1"

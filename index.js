@@ -9,7 +9,8 @@ const low = require('lowdb');
 const FileSync = require('lowdb/adapters/FileSync');
 const config = require('./config.js');
 const passport = require('passport');
-const DiscordStrategy = require('passport-discord').Strategy;
+// const DiscordStrategy = require('passport-discord').Strategy;
+const SteamStrategy = require('passport-steam').Strategy;
 // const refresh = require('passport-oauth2-refresh');
 
 passport.serializeUser(function (user, done) {
@@ -35,25 +36,45 @@ const TribePinColor = 'orange';
 const TribePinColorExpired = 'red';
 const scopes = ['identify', 'email'];
 
-var discordStrat = new DiscordStrategy({
-    clientID: config.clientId,
-    clientSecret: config.clientSecret,
-    callbackURL: config.redirectUri,
-    scope: scopes,
-    prompt: 'consent'
+// var discordStrat = new DiscordStrategy({
+//     clientID: config.discord.clientId,
+//     clientSecret: config.discord.clientSecret,
+//     callbackURL: config.discord.redirectUri,
+//     scope: scopes,
+//     prompt: 'consent'
+//   },
+//   function (accessToken, refreshToken, profile, done) {
+//     console.log(accessToken, refreshToken, profile);
+//     // User.findOrCreate({
+//     //   discordId: profile.id
+//     // }, function (err, user) {
+//     // });
+//     console.log(typeof profile);
+//     process.nextTick(function () {
+//       return done(null, profile);
+//     });
+//   });
+
+var steamStrat = new SteamStrategy({
+    returnURL: config.steam.redirectUri,
+    realm: config.steam.realm,
+    apiKey: config.steam.apiKey
   },
-  function (accessToken, refreshToken, profile, done) {
-    console.log(accessToken, refreshToken, profile);
-    // User.findOrCreate({
-    //   discordId: profile.id
+  function (identifier, profile, done) {
+    // User.findByOpenID({
+    //   openId: identifier
     // }, function (err, user) {
+    //   return done(err, user);
     // });
     console.log(typeof profile);
     process.nextTick(function () {
       return done(null, profile);
     });
-  });
-passport.use(discordStrat);
+  }
+)
+
+// passport.use(discordStrat);
+passport.use(steamStrat);
 app.use(session({
   secret: 'keyboard cat',
   resave: false,
@@ -78,17 +99,33 @@ app.use('/js', express.static('views/js'));
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.get('/auth/discord', passport.authenticate('discord', { scope: scopes, prompt: 'consent' }), function(req, res) {});
-app.get('/auth/discord/callback', passport.authenticate('discord', { // redirect url for discord
-  failureRedirect: '/'
-}), function (req, res) {
-  res.redirect('/info') // Successful auth
-});
+// app.get('/auth/discord', passport.authenticate('discord', {
+//   scope: scopes,
+//   prompt: 'consent'
+// }), function (req, res) {});
+// app.get('/auth/discord/callback', passport.authenticate('discord', { // redirect url for discord
+//   failureRedirect: '/'
+// }), function (req, res) {
+//   res.redirect('/info') // Successful auth
+// });
 
-app.get('/info', checkAuth, function(req, res) {
+app.get('/auth/steam', passport.authenticate('steam'), function (req, res) {
+  // The request will be redirected to Steam for authentication, so
+  // this function will not be called.
+});
+app.get('/auth/steam/callback', passport.authenticate('steam', {
+    failureRedirect: '/login'
+  }),
+  function (req, res) {
+    // Successful authentication, redirect home.
+    res.redirect('/info');
+  });
+
+app.get('/info', checkAuth, function (req, res) {
   //console.log(req.user)
   res.json(req.user);
 });
+
 function checkAuth(req, res, next) {
   if (req.isAuthenticated()) return next();
   res.send('not logged in :(');
@@ -141,12 +178,18 @@ app.get('/:id', (req, res) => {
       mapName = json.map;
     }
   }
+  var auth = 0;
+  if (req.isAuthenticated()) {
+    auth = 1;
+  }
   console.log(mapName);
   res.render('pages/index', {
     map: mapName,
     mark: markers,
     tribe_markers: tribe_markers,
-    title: servername
+    title: servername,
+    auth: auth,
+    authdata: req.user
   });
 });
 

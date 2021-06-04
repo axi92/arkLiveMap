@@ -30,6 +30,8 @@ ws.onmessage = function (event) {
     ws.send(JSON.stringify({ server_id: server_id }));
   } else if(typeof(json.marker) != 'undefined'){
     markerClusters.clearLayers(); // Clear all markers on map
+    playerLayer.clearLayers();
+    tribeLayer.clearLayers();
     // Players:
     mark = json.marker;
     markerLength = mark.length;
@@ -42,6 +44,7 @@ ws.onmessage = function (event) {
         })
       }).bindPopup(mark[i][4] + '<br />cheat setplayerpos ' + Math.trunc(mark[i][6]) + ' ' + Math.trunc(mark[i][7]) + ' ' + (parseInt(Math.trunc(mark[i][8])) + parseInt(1000)) + '<br />' + mark[i][5]);
       markerClusters.addLayer( m );
+      playerLayer.addLayer(m);
     }
     // Tribes:
     tribe_mark = json.tribe_markers;
@@ -55,6 +58,7 @@ ws.onmessage = function (event) {
         })
       }).bindPopup(tribe_mark[i][4] + '<br />cheat setplayerpos ' + Math.trunc(tribe_mark[i][6]) + ' ' + Math.trunc(tribe_mark[i][7]) + ' ' + (parseInt(Math.trunc(tribe_mark[i][8])) + parseInt(1000)) + '<br />' + (tribe_mark[i][9]).toFixed(2) + ' days not updated');
       markerClusters.addLayer( m );
+      tribeLayer.addLayer(m);
     }
   }
   // After everything was updated update the time

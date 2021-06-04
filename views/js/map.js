@@ -36,7 +36,11 @@ if (window.greenObelisk) L.marker([100 - greenObelisk[0], greenObelisk[1]], {
 }).addTo(map).bindPopup(greenObelisk[2] + '<br />' + greenObelisk[0].toFixed(1) + ' / ' + greenObelisk[1].toFixed(1));
 
 
-var markerClusters = L.markerClusterGroup();
+var markerClusters = L.markerClusterGroup({
+  disableClusteringAtZoom: 3
+});
+var tribeLayer = L.layerGroup();
+var playerLayer = L.layerGroup();
 
 markerLength = mark.length;
 for (i = 0; i < markerLength; i++) {
@@ -48,6 +52,7 @@ for (i = 0; i < markerLength; i++) {
     })
   }).bindPopup(mark[i][4] + '<br />cheat setplayerpos ' + Math.trunc(mark[i][6]) + ' ' + Math.trunc(mark[i][7]) + ' ' + (parseInt(Math.trunc(mark[i][8])) + parseInt(1000)) + '<br />' + mark[i][5]); // .addTo(map)
   markerClusters.addLayer( m );
+  playerLayer.addLayer(m);
 }
 
 markerLength = tribe_mark.length;
@@ -60,7 +65,13 @@ for (i = 0; i < markerLength; i++) {
     })
   }).bindPopup(tribe_mark[i][4] + '<br />cheat setplayerpos ' + Math.trunc(tribe_mark[i][6]) + ' ' + Math.trunc(tribe_mark[i][7]) + ' ' + (parseInt(Math.trunc(tribe_mark[i][8])) + parseInt(1000)) + '<br />' + (tribe_mark[i][9]).toFixed(2) + ' days not updated'); // .addTo(map)
   markerClusters.addLayer( m );
+  tribeLayer.addLayer(m);
 }
+var overlayMaps = {
+  "Players": playerLayer,
+  "Tribes": tribeLayer
+};
+L.control.layers(null, overlayMaps).addTo(map);
 
 map.setView([50, 50], 3);
 map.addLayer( markerClusters );

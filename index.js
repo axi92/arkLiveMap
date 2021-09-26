@@ -1,16 +1,28 @@
-const express = require('express');
-const session = require('express-session');
-const http = require('http');
-const bodyParser = require('body-parser');
-const WebSocket = require('ws');
-const schedule = require('node-schedule');
-const uuid = require('uuid').v4;
-const low = require('lowdb');
-const FileSync = require('lowdb/adapters/FileSync');
-const config = require('./config.js');
-const passport = require('passport');
+import express from 'express';
+// const express = require('express');
+import session from 'express-session';
+// const session = require('express-session');
+import * as http from 'http';
+// const http = require('http');
+import * as bodyParser from 'body-parser';
+// const bodyParser = require('body-parser');
+import * as WebSocket from 'ws';
+// const WebSocket = require('ws');
+import * as schedule  from 'node-schedule';
+// const schedule = require('node-schedule');
+import {v4 as uuid} from 'uuid';
+// const uuid = require('uuid').v4;
+// import * as low from 'lowdb';
+// const low = require('lowdb');
+import {Low as low, JSONFile as FileSync} from 'lowdb';
+// const FileSync = require('lowdb/adapters/FileSync');
+import {config as config} from './config.js';
+// const config = require('./config.js');
+import passport from 'passport';
+// const passport = require('passport');
 // const DiscordStrategy = require('passport-discord').Strategy;
-const SteamStrategy = require('passport-steam').Strategy;
+import {Strategy as SteamStrategy} from 'passport-steam';
+// const SteamStrategy = require('passport-steam').Strategy;
 // const refresh = require('passport-oauth2-refresh');
 
 passport.serializeUser(function (user, done) {
@@ -19,14 +31,15 @@ passport.serializeUser(function (user, done) {
 passport.deserializeUser(function (obj, done) {
   done(null, obj);
 });
+
 // console.log('stringwith " some signes "'.replace(/\"/g, '\\"'));
 // https://github.com/Automattic/mongoose
 // https://www.npmjs.com/package/mongoose-findorcreate
 // https://github.com/jaredhanson/passport-facebook/issues/152
 
 const adapter = new FileSync('db.json');
-const db = low(adapter);
-const app = express();
+const db = new low(adapter);
+const app = new express();
 const port = 8080;
 const server_data = new Map();
 const awesomeMapIconPlayer = 'user-o';
@@ -87,9 +100,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 db.defaults({
-    servers: []
-  })
-  .write();
+  servers: []
+})
+  .value();
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.json({

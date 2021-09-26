@@ -1,5 +1,4 @@
-
-config = {
+export let config = {
   discord: {
     clientId: "changeme",
     clientSecret: "changeme",
@@ -11,4 +10,3 @@ config = {
     redirectUri: "http://localhost:8080/auth/steam/callback"
   }
 }
-module.exports = config;

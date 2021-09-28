@@ -1,29 +1,15 @@
 import express from 'express';
-// const express = require('express');
 import session from 'express-session';
-// const session = require('express-session');
 import * as http from 'http';
-// const http = require('http');
-import * as bodyParser from 'body-parser';
-// const bodyParser = require('body-parser');
-import * as WebSocket from 'ws';
-// const WebSocket = require('ws');
+import bodyParser from 'body-parser';
+import WebSocket, { WebSocketServer } from 'ws';
 import * as schedule  from 'node-schedule';
-// const schedule = require('node-schedule');
 import {v4 as uuid} from 'uuid';
-// const uuid = require('uuid').v4;
-// import * as low from 'lowdb';
-// const low = require('lowdb');
-import {Low as low, JSONFile as FileSync} from 'lowdb';
-// const FileSync = require('lowdb/adapters/FileSync');
+import { Low, JSONFile } from 'lowdb';
+import lodash from 'lodash';
 import {config as config} from './config.js';
-// const config = require('./config.js');
 import passport from 'passport';
-// const passport = require('passport');
-// const DiscordStrategy = require('passport-discord').Strategy;
 import {Strategy as SteamStrategy} from 'passport-steam';
-// const SteamStrategy = require('passport-steam').Strategy;
-// const refresh = require('passport-oauth2-refresh');
 
 passport.serializeUser(function (user, done) {
   done(null, user);
@@ -37,8 +23,8 @@ passport.deserializeUser(function (obj, done) {
 // https://www.npmjs.com/package/mongoose-findorcreate
 // https://github.com/jaredhanson/passport-facebook/issues/152
 
-const adapter = new FileSync('db.json');
-const db = new low(adapter);
+const adapter = new JSONFile('db.json');
+const db = new Low(adapter);
 const app = new express();
 const port = 8080;
 const server_data = new Map();
@@ -99,10 +85,12 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-db.defaults({
+await db.read();
+db.data = db.data || {
   servers: []
-})
-  .value();
+}
+await db.write();
+db.chain = lodash.chain(db.data);
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.json({
@@ -206,7 +194,7 @@ app.get('/:id', (req, res) => {
 
 app.post('/rest/v1', function (req, res) {
   console.log('incomming data from:', req.body.servername);
-  var entry = db.get('servers')
+  var entry = db.chain.get('servers')
     .find({
       privateid: req.body.privateid
     })
@@ -224,7 +212,7 @@ app.post('/rest/v1', function (req, res) {
 
 
 const server = http.createServer(app);
-const wss = new WebSocket.Server({
+const wss = new WebSocketServer({
   clientTracking: true,
   noServer: true
 });

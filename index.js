@@ -1,17 +1,15 @@
-const express = require('express');
-const session = require('express-session');
-const http = require('http');
-const bodyParser = require('body-parser');
-const WebSocket = require('ws');
-const schedule = require('node-schedule');
-const uuid = require('uuid').v4;
-const low = require('lowdb');
-const FileSync = require('lowdb/adapters/FileSync');
-const config = require('./config.js');
-const passport = require('passport');
-// const DiscordStrategy = require('passport-discord').Strategy;
-const SteamStrategy = require('passport-steam').Strategy;
-// const refresh = require('passport-oauth2-refresh');
+import express from 'express';
+import session from 'express-session';
+import * as http from 'http';
+import bodyParser from 'body-parser';
+import WebSocket, { WebSocketServer } from 'ws';
+import * as schedule  from 'node-schedule';
+import {v4 as uuid} from 'uuid';
+import { Low, JSONFile } from 'lowdb';
+import lodash from 'lodash';
+import {config as config} from './config.js';
+import passport from 'passport';
+import {Strategy as SteamStrategy} from 'passport-steam';
 
 passport.serializeUser(function (user, done) {
   done(null, user);
@@ -19,14 +17,15 @@ passport.serializeUser(function (user, done) {
 passport.deserializeUser(function (obj, done) {
   done(null, obj);
 });
+
 // console.log('stringwith " some signes "'.replace(/\"/g, '\\"'));
 // https://github.com/Automattic/mongoose
 // https://www.npmjs.com/package/mongoose-findorcreate
 // https://github.com/jaredhanson/passport-facebook/issues/152
 
-const adapter = new FileSync('db.json');
-const db = low(adapter);
-const app = express();
+const adapter = new JSONFile('db.json');
+const db = new Low(adapter);
+const app = new express();
 const port = 8080;
 const server_data = new Map();
 const awesomeMapIconPlayer = 'user-o';
@@ -86,10 +85,12 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-db.defaults({
-    servers: []
-  })
-  .write();
+await db.read();
+db.data = db.data || {
+  servers: []
+}
+await db.write();
+db.chain = lodash.chain(db.data);
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.json({
@@ -193,7 +194,7 @@ app.get('/:id', (req, res) => {
 
 app.post('/rest/v1', function (req, res) {
   console.log('incomming data from:', req.body.servername);
-  var entry = db.get('servers')
+  var entry = db.chain.get('servers')
     .find({
       privateid: req.body.privateid
     })
@@ -211,7 +212,7 @@ app.post('/rest/v1', function (req, res) {
 
 
 const server = http.createServer(app);
-const wss = new WebSocket.Server({
+const wss = new WebSocketServer({
   clientTracking: true,
   noServer: true
 });

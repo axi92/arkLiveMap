@@ -1,9 +1,16 @@
-const low = require('lowdb');
-const FileSync = require('lowdb/adapters/FileSync');
-const uuid = require('uuid').v4;
+import { Low, JSONFile } from 'lowdb';
+import lodash from 'lodash';
+import { v4 as uuid } from 'uuid';
 
-const adapter = new FileSync('db.json');
-const db = low(adapter);
+const adapter = new JSONFile('db.json');
+const db = new Low(adapter);
+
+await db.read();
+db.data = db.data || {
+  servers: []
+}
+await db.write();
+db.chain = lodash.chain(db.data);
 
 var privateid = uuid();
 var publicid = uuid();
@@ -18,10 +25,10 @@ console.log('[HTTPLocation]');
 console.log('privateid="' + privateid + '"');
 console.log('url=""');
 
-db.get('servers')
-  .push({
+db.data.servers
+    .push({
     privateid: privateid,
     publicid: publicid,
     notes: notes
-  })
-  .write();
+  });
+await db.write();

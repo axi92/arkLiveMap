@@ -2,14 +2,25 @@ import express from 'express';
 import session from 'express-session';
 import * as http from 'http';
 import bodyParser from 'body-parser';
-import WebSocket, { WebSocketServer } from 'ws';
-import * as schedule  from 'node-schedule';
-import {v4 as uuid} from 'uuid';
-import { Low, JSONFile } from 'lowdb';
+import WebSocket, {
+  WebSocketServer
+} from 'ws';
+import * as schedule from 'node-schedule';
+import {
+  v4 as uuid
+} from 'uuid';
+import {
+  Low,
+  JSONFile
+} from 'lowdb';
 import lodash from 'lodash';
-import {config as config} from './config.js';
+import {
+  config as config
+} from './config.js';
 import passport from 'passport';
-import {Strategy as SteamStrategy} from 'passport-steam';
+import {
+  Strategy as SteamStrategy
+} from 'passport-steam';
 
 passport.serializeUser(function (user, done) {
   done(null, user);
@@ -253,6 +264,10 @@ wss.getUniqueID = function () {
 };
 
 schedule.scheduleJob('*/15 * * * * *', async function () {
+  sendData();
+});
+
+function sendData() {
   if (wss.clients != undefined) {
     wss.clients.forEach(function each(client) {
       if (client.readyState === WebSocket.OPEN) {
@@ -294,17 +309,17 @@ schedule.scheduleJob('*/15 * * * * *', async function () {
   } else {
     console.log('no clients connected');
   }
-});
+}
 
 server.listen(port, function () {
   console.log(`Listening on http://localhost:${port}`);
 });
 
-function GetTribePinColor(lastStructureUpdateTime){
+function GetTribePinColor(lastStructureUpdateTime) {
   let localTribePinColor;
   if (lastStructureUpdateTime > TribePinColorExpiredCount) {
     localTribePinColor = TribePinColorExpired;
-  } else if(lastStructureUpdateTime > TribePinColorOrangeCount && lastStructureUpdateTime < TribePinColorExpiredCount) {
+  } else if (lastStructureUpdateTime > TribePinColorOrangeCount && lastStructureUpdateTime < TribePinColorExpiredCount) {
     localTribePinColor = TribePinColorOrange;
   } else {
     localTribePinColor = TribePinColor;

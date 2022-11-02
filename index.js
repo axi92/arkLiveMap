@@ -9,10 +9,8 @@ import * as schedule from 'node-schedule';
 import {
   v4 as uuid
 } from 'uuid';
-import {
-  Low,
-  JSONFile
-} from 'lowdb';
+import { Low } from 'lowdb'
+import { JSONFile } from 'lowdb/node'
 import lodash from 'lodash';
 import {
   config as config

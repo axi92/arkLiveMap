@@ -1,0 +1,17 @@
+version: "3"
+
+# More info at https://github.com/pi-hole/docker-pi-hole/ and https://docs.pi-hole.net/
+services:
+  candyapi:
+    container_name: arklivemap
+    hostname: arklivemap
+    image: node:18.15.0-alpine
+    ports:
+      - "8080:8080/tcp"
+    environment:
+      TZ: 'Europe/Vienna'
+    restart: unless-stopped
+    entrypoint: './entry.sh'
+    volumes:
+      - './:/home/node'
+    working_dir: '/home/node'

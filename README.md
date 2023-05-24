@@ -9,7 +9,7 @@
   <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=2228258035" target="_blank">
     <img alt="steam" src="https://img.shields.io/badge/steam-Workshop-lightgrey" />
   </a>
-  <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=" target="_blank">
+  <a href="https://www.paypal.com/donate/?hosted_button_id=55XP6HK5C3ZWE" target="_blank">
     <img alt="donate" src="https://img.shields.io/badge/Donate-PayPal-green.svg" />
   </a>
 
@@ -64,7 +64,7 @@ Contributions, issues and feature requests are welcome!<br />Feel free to check 
 
 Give a ⭐️ if this project helped you!
 
-  <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=" target="_blank">
+  <a href="https://www.paypal.com/donate/?hosted_button_id=55XP6HK5C3ZWE" target="_blank">
     <img alt="donate" src="https://img.shields.io/badge/Donate-PayPal-green.svg" />
   </a>
 

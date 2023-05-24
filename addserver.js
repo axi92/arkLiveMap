@@ -1,4 +1,5 @@
-import { Low, JSONFile } from 'lowdb';
+import { JSONFile } from 'lowdb/node';
+import { Low } from 'lowdb';
 import lodash from 'lodash';
 import { v4 as uuid } from 'uuid';
 
@@ -17,13 +18,15 @@ var publicid = uuid();
 var notes = 'cluster, adminname, servername';
 
 console.log('-----------------------------');
-console.log('publicid:', publicid);
 console.log('notes:', notes);
+console.log('https://arkmap.axi92.at/' + publicid);
 console.log('Config:');
-console.log('___');
+console.log('```');
 console.log('[HTTPLocation]');
 console.log('privateid="' + privateid + '"');
-console.log('url=""');
+console.log('URL="https://arkmap.axi92.at/rest/v1"');
+console.log('```');
+
 
 db.data.servers
     .push({

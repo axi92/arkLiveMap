@@ -1,7 +1,7 @@
 {
   "name": "arklivemap",
   "version": "1.0.0",
-  "description": "",
+  "description": "The server component to arklivemap mod.",
   "main": "index.js",
   "type": "module",
   "directories": {
@@ -29,6 +29,10 @@
     "start": "node index.js"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "author": "axi92",
+  "license": "GNU GPGv3",
+  "engines": {
+    "npm": ">=9.5.0",
+    "node": ">=18.15.0"
+  }
 }

@@ -14,7 +14,7 @@
     "express-session": "^1.17.3",
     "http": "0.0.1-security",
     "lodash": "^4.17.21",
-    "lowdb": "^5.1.0",
+    "lowdb": "^6.1.1",
     "node-schedule": "^2.1.1",
     "passport": "^0.6.0",
     "passport-discord": "^0.1.4",

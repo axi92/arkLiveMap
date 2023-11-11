@@ -1,7 +1,7 @@
-var mapfile = '/images/island.jpg';
+var mapfile = '/images/TheIsland_WP.jpg';
 var bounds = [
-  [-5, -5],
-  [105, 105]
+  [0, 0],
+  [100, 100]
 ];
 var blueObelisk = [25.5, 25.6, 'Blue obelisk'];
 var greenObelisk = [59.0, 72.3, 'Green obelisk'];

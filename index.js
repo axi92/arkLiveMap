@@ -178,9 +178,9 @@ app.get('/:id', (req, res) => {
   }
   var mapName;
   if (typeof json === 'undefined') { // if no data is present from the server take ragnarok
-    mapName = 'Ragnarok';
+    mapName = 'TheIsland_WP';
   } else {
-    if (json.map == 'TestMapArea') { // debug on testmap also ragnarok
+    if (json.map == 'TheIsland_WP') { // debug on testmap also ragnarok
       mapName = 'Ragnarok';
     } else {
       mapName = json.map;

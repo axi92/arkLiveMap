@@ -155,7 +155,7 @@ app.get('/:id', (req, res) => {
     var markers = 'var mark = [';
     for (var key in players) {
       if (players.hasOwnProperty(key)) {
-        markers += '[' + players[key].y + ',' + players[key].x + ',"' + awesomeMapIconPlayer + '","' + PlayerPinColor + '","' + players[key].playername.replace(/\"/g, '\\"') + '","' + players[key].tribename.replace(/\"/g, '\\"') + '",' + players[key].x_ue4 + ',' + players[key].y_ue4 + ',' + players[key].z_ue4 + '],';
+        markers += '[' + players[key].y_pos + ',' + players[key].x_pos + ',"' + awesomeMapIconPlayer + '","' + PlayerPinColor + '","' + players[key].playername.replace(/\"/g, '\\"') + '","' + players[key].tribename.replace(/\"/g, '\\"') + '",' + players[key].x_ue4 + ',' + players[key].y_ue4 + ',' + players[key].z_ue4 + '],';
       }
     }
     markers = markers.slice(0, -1); // slice the last ","
@@ -164,7 +164,7 @@ app.get('/:id', (req, res) => {
       if (tribes.hasOwnProperty(key)) {
         let lastStructureUpdateTime = (Math.trunc(tribes[key].elapsedTime) - Math.trunc(tribes[key].lastInAllyRangeTime)) / 60 / 60 / 24; // convert seconds to days
         let localTribePinColor = GetTribePinColor(lastStructureUpdateTime);
-        tribe_markers += '[' + tribes[key].y + ',' + tribes[key].x + ',"' + awesomeMapIconTribe + '","' + localTribePinColor + '","' + tribes[key].tribename.replace(/\"/g, '\\"') + '","' + tribes[key].tribename.replace(/\"/g, '\\"') + '",' + tribes[key].x_ue4 + ',' + tribes[key].y_ue4 + ',' + tribes[key].z_ue4 + ',' + lastStructureUpdateTime + '],';
+        tribe_markers += '[' + tribes[key].y_pos + ',' + tribes[key].x_pos + ',"' + awesomeMapIconTribe + '","' + localTribePinColor + '","' + tribes[key].tribename.replace(/\"/g, '\\"') + '","' + tribes[key].tribename.replace(/\"/g, '\\"') + '",' + tribes[key].x_ue4 + ',' + tribes[key].y_ue4 + ',' + tribes[key].z_ue4 + ',' + lastStructureUpdateTime + '],';
       }
     }
     tribe_markers = tribe_markers.slice(0, -1); // slice the last ","
@@ -276,7 +276,7 @@ function sendData() {
           var markers = [];
           for (var key in players) {
             if (players.hasOwnProperty(key)) {
-              markers.push([players[key].x, players[key].y, awesomeMapIconPlayer, PlayerPinColor, players[key].playername.replace(/\"/g, '\\"'), players[key].tribename.replace(/\"/g, '\\"'), players[key].x_ue4, players[key].y_ue4, players[key].z_ue4]);
+              markers.push([players[key].x_pos, players[key].y_pos, awesomeMapIconPlayer, PlayerPinColor, players[key].playername.replace(/\"/g, '\\"'), players[key].tribename.replace(/\"/g, '\\"'), players[key].x_ue4, players[key].y_ue4, players[key].z_ue4]);
             }
           }
           // Tribes
@@ -286,7 +286,7 @@ function sendData() {
             if (tribes.hasOwnProperty(key)) {
               let lastStructureUpdateTime = (Math.trunc(tribes[key].elapsedTime) - Math.trunc(tribes[key].lastInAllyRangeTime)) / 60 / 60 / 24; // convert seconds to days
               let localTribePinColor = GetTribePinColor(lastStructureUpdateTime);
-              tribe_markers.push([tribes[key].x, tribes[key].y, awesomeMapIconTribe, localTribePinColor, tribes[key].tribename.replace(/\"/g, '\\"'), tribes[key].tribename.replace(/\"/g, '\\"'), tribes[key].x_ue4, tribes[key].y_ue4, tribes[key].z_ue4, lastStructureUpdateTime]);
+              tribe_markers.push([tribes[key].x_pos, tribes[key].y_pos, awesomeMapIconTribe, localTribePinColor, tribes[key].tribename.replace(/\"/g, '\\"'), tribes[key].tribename.replace(/\"/g, '\\"'), tribes[key].x_ue4, tribes[key].y_ue4, tribes[key].z_ue4, lastStructureUpdateTime]);
             }
           }
           // Serverclock

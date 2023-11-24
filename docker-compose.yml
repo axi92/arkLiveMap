@@ -5,7 +5,7 @@ services:
   arklivemap:
     container_name: arklivemap
     hostname: arklivemap
-    image: 18.18.2-alpine3.17
+    image: 18.18.2-alpine
     ports:
       - "127.0.0.1:8088:8080/tcp"
     environment:

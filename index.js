@@ -67,10 +67,10 @@ const scopes = ['identify', 'email'];
 //   });
 
 var steamStrat = new SteamStrategy({
-    returnURL: config.steam.redirectUri,
-    realm: config.steam.realm,
-    apiKey: config.steam.apiKey
-  },
+  returnURL: config.steam.redirectUri,
+  realm: config.steam.realm,
+  apiKey: config.steam.apiKey
+},
   function (identifier, profile, done) {
     // User.findByOpenID({
     //   openId: identifier
@@ -127,8 +127,8 @@ app.get('/auth/steam', passport.authenticate('steam'), function (req, res) {
   // this function will not be called.
 });
 app.get('/auth/steam/callback', passport.authenticate('steam', {
-    failureRedirect: '/login'
-  }),
+  failureRedirect: '/login'
+}),
   function (req, res) {
     // Successful authentication, redirect home.
     res.redirect('/info');
@@ -177,10 +177,10 @@ app.get('/:id', (req, res) => {
     tribe_markers = 'var tribe_mark = [];';
   }
   var mapName;
-  if (typeof json === 'undefined') { // if no data is present from the server take ragnarok
+  if (typeof json === 'undefined') { // if no data is present from the server take the asa Island
     mapName = 'TheIsland_WP';
   } else {
-    if (json.map == 'TestMapArea') { // debug on testmap also ragnarok
+    if (json.map == 'TestMapArea') { // debug on testmap also asa Island
       mapName = 'TheIsland_WP';
     } else {
       mapName = json.map;
@@ -203,6 +203,17 @@ app.get('/:id', (req, res) => {
 
 app.post('/rest/v1', function (req, res) {
   console.log('incomming data from:', req.body.servername);
+
+  // Function to rename old x and y to x_pos and y_pos
+  function renameXandY(object) {
+    for (const key in object) {
+      object[key].x_pos = object[key].x;
+      object[key].y_pos = object[key].y;
+      // ${object[key]}
+    }
+    return object;
+  }
+
   var entry = db.chain.get('servers')
     .find({
       privateid: req.body.privateid
@@ -211,6 +222,8 @@ app.post('/rest/v1', function (req, res) {
   if (entry === undefined) {
     res.send('{ response: 1, error: "Not authorized" }');
   } else {
+    renameXandY(req.body.tribes);
+    renameXandY(req.body.players);
     server_data.set(entry.publicid, req.body);
     // if(req.body.servername == 'The Sunny Side of ARK:TEST') {
     //   console.log(req.body);

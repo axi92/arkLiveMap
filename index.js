@@ -207,9 +207,10 @@ app.post('/rest/v1', function (req, res) {
   // Function to rename old x and y to x_pos and y_pos
   function renameXandY(object) {
     for (const key in object) {
-      object[key].x_pos = object[key].x;
-      object[key].y_pos = object[key].y;
-      // ${object[key]}
+      if(object[key].x != undefined){
+        object[key].x_pos = object[key].x;
+        object[key].y_pos = object[key].y;
+      }
     }
     return object;
   }

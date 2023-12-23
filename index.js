@@ -178,7 +178,8 @@ app.get('/:id', (req, res) => {
   }
   var mapName;
   if (typeof json === 'undefined') { // if no data is present from the server take the asa Island
-    mapName = 'TheIsland_WP';
+    mapName = 'TheIsland_WP'; // default map
+    // mapName = 'Svartalfheim_WP'; // dev map
   } else {
     if (json.map == 'TestMapArea') { // debug on testmap also asa Island
       mapName = 'TheIsland_WP';

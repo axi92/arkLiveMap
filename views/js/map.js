@@ -5,7 +5,7 @@ var map = L.map('map', {
   maxZoom: 20
 });
 
-var image = L.imageOverlay(mapfile, bounds).addTo(map);
+L.imageOverlay(mapfile, bounds).addTo(map);
 
 var obelIcon = L.Icon.extend({
   options: {

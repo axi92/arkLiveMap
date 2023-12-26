@@ -22,7 +22,7 @@
     "passport-steam": "^1.0.18",
     "uuid": "^9.0.1",
     "websocket": "^1.0.34",
-    "ws": "^8.15.1"
+    "ws": "^8.16.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

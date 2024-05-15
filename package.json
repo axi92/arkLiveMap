@@ -21,7 +21,7 @@
     "passport-oauth2-refresh": "^2.2.0",
     "passport-steam": "^1.0.18",
     "uuid": "^9.0.1",
-    "websocket": "^1.0.34",
+    "websocket": "^1.0.35",
     "ws": "^8.17.0"
   },
   "scripts": {

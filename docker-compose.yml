@@ -1,11 +1,8 @@
-version: "3"
-
-# More info at https://github.com/pi-hole/docker-pi-hole/ and https://docs.pi-hole.net/
 services:
   arklivemap:
     container_name: arklivemap
     hostname: arklivemap
-    image: node:20.10.0-alpine
+    image: node:lts-alpine
     ports:
       - "127.0.0.1:8088:8080/tcp"
     environment:

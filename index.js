@@ -203,7 +203,7 @@ app.get('/:id', (req, res) => {
 });
 
 app.post('/rest/v1', function (req, res) {
-  console.log('incomming data from:', req.body.servername);
+  console.log('incomming data from:', req.body.servername, req.body.map);
 
   // Function to rename old x and y to x_pos and y_pos
   function renameXandY(object) {

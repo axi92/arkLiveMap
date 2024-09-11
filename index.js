@@ -203,7 +203,7 @@ app.get('/:id', (req, res) => {
 });
 
 app.post('/rest/v1', function (req, res) {
-  console.log('incomming data from:', req.body.servername);
+  console.log('incomming data from:', req.body.servername, req.body.map);
 
   // Function to rename old x and y to x_pos and y_pos
   function renameXandY(object) {
@@ -309,13 +309,19 @@ function sendData() {
           if (typeof (json.serverclock) != 'undefined') {
             serverclock = json.serverclock;
           }
+          // Map
+          var map = ''
+          if (typeof (json.map) != 'undefined') {
+            map = json.map;
+          }
         }
         //console.log('Markers:', markers);
         //console.log('Tribes:', tribe_markers);
         client.send(JSON.stringify({
           marker: markers,
           tribe_markers: tribe_markers,
-          serverclock: serverclock
+          serverclock: serverclock,
+          map, map
         }));
       }
     });

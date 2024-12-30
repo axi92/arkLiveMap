@@ -1,8 +1,0 @@
-apps:
-  - script: index.js
-    name: 'arkLiveMap'
-    watch: false
-    node_args: '--optimize_for_size --max_old_space_size=96 --gc_interval=100'
-    kill_timeout : 3000
-    min_uptime: "10s"
-    max_restarts: 15

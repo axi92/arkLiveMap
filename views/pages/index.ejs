@@ -16,8 +16,6 @@
 </head>
 
 <body>
-  <!-- <%- include('sidebar.ejs') %> -->
-
   <div class="largeclock timeofday">
     <div class="timeofday digitalclock" id="clock">Day ?, ??:??:??</div>
   </div>
@@ -66,6 +64,8 @@
       <script src="/js/static/astraeos.js"></script>
   <% } else if(map == 'Forglar_WP'){ %>
       <script src="/js/static/forglar.js"></script>
+  <% } else if(map == 'Ragnarok_WP'){ %>
+      <script src="/js/static/ragnarok.js"></script>
   <% } %>
   <script>
     <%- mark %>

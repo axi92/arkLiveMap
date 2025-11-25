@@ -8,7 +8,7 @@
     "example": "examples"
   },
   "dependencies": {
-    "body-parser": "^1.20.2",
+    "body-parser": "^2.2.1",
     "ejs": "^3.1.10",
     "express": "^4.21.2",
     "express-session": "^1.18.2",

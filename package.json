@@ -21,7 +21,7 @@
     "passport-oauth2-refresh": "^2.2.0",
     "passport-steam": "^1.0.18",
     "uuid": "^10.0.0",
-    "ws": "^8.18.3"
+    "ws": "^8.19.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

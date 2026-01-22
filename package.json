@@ -13,7 +13,7 @@
     "express": "^4.22.1",
     "express-session": "^1.18.2",
     "http": "0.0.1-security",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "lowdb": "^5.1.0",
     "node-schedule": "^2.1.1",
     "passport": "^0.7.0",
